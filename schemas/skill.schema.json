@@ -138,7 +138,10 @@
                 "type": "string"
               },
               "point": {
-                "type": "object",
+                "type": [
+                  "object",
+                  "null"
+                ],
                 "required": [
                   "x",
                   "y"

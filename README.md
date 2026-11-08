@@ -44,6 +44,29 @@ if (!r.ok) console.error(r.message)   // 一条人能读的失败原因
 
 要求只有一条：**判据必须机器可验**。"写得好不好"不是判据，"金额合计是否相等"是。
 
+## 已有的领域包
+
+| 包 | 目录 | 判据 |
+|---|---|---|
+| `accounting`（会计） | `packs/accounting/` | 发票合计/笔数核对（可执行脚本）、输出目录非空 |
+
+装一个包：
+
+```bash
+node bin/he-server.js pack validate <包目录>   # 只校验
+node bin/he-server.js pack install <包目录>    # 装进本地卡片库
+```
+
+包里的 `{{packCheck:xxx}}` 会在安装时替换成该包 `checks/xxx.mjs` 的真实路径，
+所以判据可以是真的会跑的脚本，不是"某某字符串出现"。
+
+```bash
+# 会计包的合计校验可以直接跑
+node packs/accounting/checks/total.mjs packs/accounting/examples/invoices.csv \
+  --total 7244.50 --count 4 --amount-col 2
+# 通过：4 笔，合计 7244.50（列「金额」）
+```
+
 ## 许可
 
 MIT。格式本身（schema 的结构）视同 CC0 —— 你实现它不需要任何授权。

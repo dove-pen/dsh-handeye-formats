@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "name": "accounting",
+  "version": "0.1.0",
+  "description": "会计：发票整理、流水对账、月度汇总。选这个领域的理由：判据天生机器可验（金额、笔数、合计），错了能改，风险低。",
+  "author": "community",
+  "license": "MIT",
+  "verify": [
+    {
+      "name": "发票合计一致",
+      "description": "明细金额之和必须等于汇总数，且笔数吻合",
+      "checks": [
+        {
+          "type": "exit",
+          "command": "node \"{{packCheck:total}}\" \"{{invoiceCsv}}\" --total {{expectedTotal}} --count {{expectedCount}} --amount-col 2"
+        }
+      ]
+    },
+    {
+      "name": "输出目录非空",
+      "description": "整理完必须真的有文件产出",
+      "checks": [{ "type": "file", "path": "{{outDir}}", "minBytes": 1 }]
+    }
+  ],
+  "cards": [
+    {
+      "schemaVersion": 1,
+      "id": "invoice_tidy",
+      "title": "发票整理",
+      "origin": "imported",
+      "version": 1,
+      "delivery": "start",
+      "autonomy": "supervised",
+      "category": "accounting",
+      "goal": "把一批发票 PDF 按开票月份归入文件夹，文件名统一成「日期_金额_客户」，最后核对张数与合计。",
+      "path": ["清点所有 PDF 并读出日期与金额", "按月份建文件夹", "逐个重命名并移入", "核对张数与合计"],
+      "inputs": ["invoiceDir", "outDir", "expectedCount", "expectedTotal"],
+      "constraints": [
+        "只处理 .pdf，不要碰其他文件",
+        "重命名前先确认目标文件名不重复",
+        "金额看不清就标注「待人工确认」，不要猜"
+      ],
+      "success": "每个 PDF 都在对应月份的文件夹里，文件名含日期与金额，张数与合计和汇总一致",
+      "onFailure": "把有问题的文件列出来交给用户，不要继续猜",
+      "verify": [{ "type": "file", "path": "{{outDir}}", "minBytes": 1 }],
+      "estimatedSteps": 4
+    },
+    {
+      "schemaVersion": 1,
+      "id": "bank_reconcile",
+      "title": "银行流水对账",
+      "origin": "imported",
+      "version": 1,
+      "delivery": "start",
+      "autonomy": "supervised",
+      "category": "accounting",
+      "goal": "把银行流水 CSV 与自己的明细表逐笔核对，列出未匹配的条目。",
+      "path": ["读入两份表", "按金额+日期匹配", "列出未匹配项", "核对笔数与合计"],
+      "inputs": ["bankCsv", "bookCsv", "expectedCount", "expectedTotal"],
+      "constraints": [
+        "同金额同日期多笔时按顺序一一对应，不要重复使用同一笔",
+        "未匹配项单独输出，不要静默丢弃"
+      ],
+      "success": "输出匹配结果与未匹配清单，笔数与合计能对上",
+      "onFailure": "报告卡在哪一步，不要自行修改原始表",
+      "verify": [
+        {
+          "type": "exit",
+          "command": "node \"{{packCheck:total}}\" \"{{bankCsv}}\" --total {{expectedTotal}} --count {{expectedCount}} --amount-col 2"
+        }
+      ],
+      "estimatedSteps": 4
+    },
+    {
+      "schemaVersion": 1,
+      "id": "monthly_summary",
+      "title": "月度汇总",
+      "origin": "imported",
+      "version": 1,
+      "delivery": "start",
+      "autonomy": "readonly",
+      "category": "accounting",
+      "goal": "把本月发票明细汇总成一张汇总表：按客户分组合计、总笔数、总金额。",
+      "path": ["读入明细", "按客户分组求和", "写出汇总表", "核对总计"],
+      "inputs": ["invoiceCsv", "outFile", "expectedTotal"],
+      "constraints": ["汇总表的总额必须等于明细总额", "不要修改原始明细"],
+      "success": "汇总表已生成，总额与明细一致，客户分组无遗漏",
+      "onFailure": "指出哪一组的合计对不上，不要四舍五入掩盖差额",
+      "verify": [
+        { "type": "file", "path": "{{outFile}}", "minBytes": 20 },
+        {
+          "type": "exit",
+          "command": "node \"{{packCheck:total}}\" \"{{invoiceCsv}}\" --total {{expectedTotal}} --amount-col 2"
+        }
+      ],
+      "estimatedSteps": 4
+    }
+  ],
+  "skills": []
+}

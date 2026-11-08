@@ -1,5 +1,15 @@
 # dsh-handeye-formats
 
+**https://github.com/dove-pen/dsh-handeye-formats**
+
+手眼插件的公共格式。配套的主仓是 https://github.com/dove-pen/dsh-handeye （用格式的人）。
+
+```bash
+git clone git@github.com:dove-pen/dsh-handeye-formats.git
+cd dsh-handeye-formats
+node --test          # 16 条
+```
+
 手眼插件的**公共格式**：技能、判据、领域包。
 
 这里放的是"规矩"，不是"实现"。任何工具都可以照着它实现，不需要用本插件。
@@ -18,6 +28,8 @@
 | `schemas/domain-pack.schema.json` | 领域包：某个行业的判据 + 卡片 + 技能模板 | 社区贡献的入口；核心不随行业变 |
 
 ## 用法
+
+> 不想 clone 也行：三份 schema 就是三个 JSON 文件，直接复制走即可。
 
 ```js
 import { validateSkill, validateVerify, validateDomainPack, FORMATS_VERSION } from 'dsh-handeye-formats'

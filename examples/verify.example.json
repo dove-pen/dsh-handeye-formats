@@ -1,0 +1,7 @@
+[
+  { "type": "file", "path": "D:\\out\\report.md", "minBytes": 200 },
+  { "type": "text", "file": "D:\\out\\report.md", "appear": "结论" },
+  { "type": "screen", "appear": "保存成功" },
+  { "type": "exit", "command": "node --version" },
+  { "type": "changed" }
+]

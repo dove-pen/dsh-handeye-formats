@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "skill_20261108_01",
+  "title": "订阅一个邮件通讯",
+  "version": 1,
+  "origin": { "kind": "episode", "episodeIds": ["ep_a", "ep_b", "ep_c"], "createdAt": "2026-11-08T13:00:00Z", "author": "local" },
+  "params": [
+    { "name": "url", "required": true, "example": "https://example.com" },
+    { "name": "email", "required": true, "example": "someone@example.com" }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "intent": "打开订阅页",
+      "tool": "browser_navigate",
+      "args": { "url": "{{url}}" },
+      "anchor": { "kind": "navigate", "text": "", "container": "Chrome", "fragile": false, "source": "output.window" },
+      "expect": [{ "type": "screen", "appear": "订阅" }],
+      "onFail": "stop"
+    },
+    {
+      "id": "s2",
+      "intent": "点免费订阅",
+      "tool": "hand_click_text",
+      "args": { "text": "免费订阅" },
+      "anchor": { "kind": "click-by-text", "text": "免费订阅", "container": "Chrome", "fragile": false, "source": "args.text" },
+      "expect": [{ "type": "text", "screen": true, "appear": "感谢订阅" }],
+      "onFail": "stop"
+    }
+  ],
+  "health": { "runs": 0, "ok": 0, "fail": 0, "failsInRow": 0, "lastRunAt": null, "lastFailReason": null, "status": "untested" },
+  "incomplete": { "stepsWithoutChecks": 0, "fragileSteps": 0 }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "dsh-handeye-formats",
+  "version": "1.0.0",
+  "description": "手眼插件的公共格式：技能 / 判据 / 领域包。任何人都可以实现，不依赖本插件。",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./schemas/*": "./schemas/*"
+  },
+  "files": ["schemas", "lib", "examples", "README.md"],
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

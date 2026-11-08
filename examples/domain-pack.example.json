@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "name": "accounting",
+  "version": "0.1.0",
+  "description": "会计：发票整理与流水对账（判据天生机器可验：金额、笔数、总额）",
+  "author": "community",
+  "license": "MIT",
+  "verify": [
+    { "name": "金额合计一致", "description": "明细之和 = 汇总数", "checks": [{ "type": "text", "file": "{{sheet}}", "appear": "{{expectedTotal}}" }] }
+  ],
+  "cards": [
+    {
+      "id": "invoice_tidy",
+      "title": "发票整理",
+      "goal": "把一批发票 PDF 按月份归入文件夹并重命名",
+      "path": ["清点文件", "按开票日期分组", "重命名", "核对张数"],
+      "verify": [{ "type": "file", "path": "{{outDir}}", "minBytes": 0 }],
+      "category": "accounting",
+      "inputs": ["outDir"]
+    }
+  ],
+  "skills": []
+}

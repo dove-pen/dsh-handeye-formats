@@ -10,58 +10,142 @@
     "oneOf": [
       {
         "type": "object",
-        "required": ["type", "path"],
+        "required": [
+          "type",
+          "path"
+        ],
         "additionalProperties": false,
         "properties": {
-          "type": { "const": "file" },
-          "path": { "type": "string", "minLength": 1 },
-          "minBytes": { "type": "integer", "minimum": 0 },
-          "timeoutMs": { "type": "integer", "minimum": 1 }
+          "type": {
+            "const": "file"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minBytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 1
+          }
         }
       },
       {
         "type": "object",
-        "required": ["type"],
+        "required": [
+          "type"
+        ],
         "additionalProperties": false,
         "properties": {
-          "type": { "const": "text" },
-          "file": { "type": "string", "minLength": 1 },
-          "screen": { "type": "boolean" },
-          "appear": { "type": "string", "minLength": 1 },
-          "absent": { "type": "string", "minLength": 1 },
-          "region": { "type": "string" },
-          "timeoutMs": { "type": "integer", "minimum": 1 }
+          "type": {
+            "const": "text"
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "screen": {
+            "type": "boolean"
+          },
+          "appear": {
+            "type": "string",
+            "minLength": 1
+          },
+          "absent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string"
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "file"
+            ]
+          },
+          {
+            "required": [
+              "screen"
+            ],
+            "properties": {
+              "screen": {
+                "const": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "object",
+        "required": [
+          "type",
+          "appear"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "screen"
+          },
+          "appear": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string"
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 1
+          }
         }
       },
       {
         "type": "object",
-        "required": ["type", "appear"],
+        "required": [
+          "type",
+          "command"
+        ],
         "additionalProperties": false,
         "properties": {
-          "type": { "const": "screen" },
-          "appear": { "type": "string", "minLength": 1 },
-          "region": { "type": "string" },
-          "timeoutMs": { "type": "integer", "minimum": 1 }
+          "type": {
+            "const": "exit"
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 1
+          }
         }
       },
       {
         "type": "object",
-        "required": ["type", "command"],
+        "required": [
+          "type"
+        ],
         "additionalProperties": false,
         "properties": {
-          "type": { "const": "exit" },
-          "command": { "type": "string", "minLength": 1 },
-          "timeoutMs": { "type": "integer", "minimum": 1 }
-        }
-      },
-      {
-        "type": "object",
-        "required": ["type"],
-        "additionalProperties": false,
-        "properties": {
-          "type": { "const": "changed" },
-          "region": { "type": "string" },
-          "timeoutMs": { "type": "integer", "minimum": 1 }
+          "type": {
+            "const": "changed"
+          },
+          "region": {
+            "type": "string"
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 1
+          }
         }
       }
     ]
